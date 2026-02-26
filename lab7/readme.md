@@ -1,16 +1,17 @@
 # Lab 7 – Keyboard Accessibility & Accessible Web Forms
 
 ## Q1:
-- Removed tabindex misuse
+- Fixed tabindex issues
 - Removed outline suppression
 - Added skip link
-- Replaced # links with valid in-page anchors
-- Ensured proper focus visibility
+- Ensured visible focus state
+- Removed focus-triggered window behavior
 
 ## Q2/Q3:
-- Added proper label/for associations
-- Used fieldset/legend for radio group
+- Added proper label associations
+- Used fieldset and legend for radio group
 - Implemented accessible error summary
 - Added focus management
-- Removed alert() and replaced with conditional success message
-- Connected errors using aria-describedby
+- Connected errors with aria-describedby
+- Replaced alert() with conditional success message
+- Implemented URL parameter prefill using URLSearchParams
