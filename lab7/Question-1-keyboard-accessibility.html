@@ -153,7 +153,8 @@
         <a href="#section-sports">Sports</a>
 
         <a href="#search" class="btn-search pull-right">
-          <img src="https://raw.githubusercontent.com/udacity/ud891/2de2a0688c68809a3b453db3a24b1a59e8401459/lesson2-focus/02-dom-order/images/search.svg" alt="Search icon" />
+          <img src="https://raw.githubusercontent.com/udacity/ud891/2de2a0688c68809a3b453db3a24b1a59e8401459/lesson2-focus/02-dom-order/images/search.svg"
+               alt="Search icon" />
           Search
         </a>
       </nav>
@@ -166,10 +167,13 @@
 
       <!-- LAB7 Q1: Added label for input (keyboard + screen reader friendly) -->
       <label class="offscreen" for="newsletter-email">Email address</label>
-      <input id="newsletter-email" type="text" inputmode="email" autocomplete="email">
+
+      <!-- LAB7 Q1: Improved semantic input type for email -->
+      <input id="newsletter-email" type="email" autocomplete="email" required>
 
       <!-- LAB7 Q1: Removed onfocus behavior that opened a new window; use click instead -->
-      <button id="signupBtn" type="button">Sign up</button>
+      <!-- LAB7 Q1: Added aria-label to indicate it opens a new tab -->
+      <button id="signupBtn" type="button" aria-label="Sign up (opens in a new tab)">Sign up</button>
     </div>
   </div>
 
@@ -199,7 +203,7 @@
 
         <article id="business-article-1">
           <h3 class="headline">Bee wonders if maybe everyone else is a drone and he's the only one who has it "figured out."</h3>
-          <!-- LAB7 Q1: Removed tabindex="1" that broke tab order -->
+          <!-- LAB7 Q1: Removed tabindex that broke tab order -->
           <p><a href="#business-article-1"><b>Read More</b></a></p>
           <img src="https://github.com/udacity/ud891/blob/gh-pages/lesson2-focus/02-dom-order/images/bee.jpg?raw=true"
                alt="A bee on top of a flower" />
@@ -266,7 +270,6 @@
       <h2 id="search-title">Search</h2>
       <p>This section is included as an in-page destination for the Search link.</p>
     </section>
-
   </main>
 
   <script>
