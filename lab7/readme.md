@@ -1,17 +1,17 @@
-# Lab 7 – Keyboard Accessibility & Accessible Web Forms
+## Lab 7 – Keyboard Accessibility & Accessible Web Forms
 
-## Q1:
-- Fixed tabindex issues
-- Removed outline suppression
-- Added skip link
-- Ensured visible focus state
-- Removed focus-triggered window behavior
+### Q1 – Keyboard accessibility
+- Fixed broken tab order by removing incorrect `tabindex` usage
+- Kept visible focus indicators (did not suppress outlines)
+- Added a “Skip to main content” link for keyboard users
+- Replaced placeholder links (`href="#"`) with real in-page targets
+- Removed focus-triggered behavior (new window opens only on click)
 
-## Q2/Q3:
-- Added proper label associations
-- Used fieldset and legend for radio group
-- Implemented accessible error summary
-- Added focus management
-- Connected errors with aria-describedby
-- Replaced alert() with conditional success message
-- Implemented URL parameter prefill using URLSearchParams
+### Q2/Q3 – Accessible web form + validation
+- Added correct label/input associations (`for` / `id`)
+- Grouped radio buttons using `fieldset` and `legend`
+- Implemented an accessible error summary with focus management
+- Added clickable error links that move focus to the related field
+- Added inline error messages with `aria-describedby` and `aria-invalid`
+- Replaced `alert()` with an on-page success message
+- Implemented URL parameter prefill using `URLSearchParams` (no jQuery dependency)
