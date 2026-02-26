@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LAB7 Q2/Q3: Accessible form markup + focus management + error summary + no alert() -->
+<!-- LAB7 Q2/Q3: Accessible form markup + focus management + error summary + no alert() + URL prefill support -->
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -99,7 +99,8 @@
     "use strict";
 
     (function () {
-      // LAB7 Q3: helper to read URL param (kept from starter code)
+
+      // LAB7 Q3: helper to read URL param (starter behavior)
       $.urlParam = function (name) {
         var results = new RegExp('[?&]' + name + '=([^&#]*)').exec(window.location.href);
         return results === null ? null : (decodeURI(results[1]) || null);
@@ -110,7 +111,8 @@
         $('.field-error').remove();
         $('[aria-invalid="true"]').removeAttr('aria-invalid');
         $('[data-has-error="true"]').removeAttr('data-has-error');
-        // Keep help text ids intact; remove only error-specific describedby when we add it
+
+        // Remove only error-specific describedby when we add it
         $('[data-error-describedby="true"]').each(function () {
           $(this).removeAttr('aria-describedby');
           $(this).removeAttr('data-error-describedby');
@@ -122,14 +124,12 @@
         $el.attr('aria-invalid', 'true');
         $el.attr('data-has-error', 'true');
 
-        // Attach aria-describedby to the error text we create (for SR)
         $el.attr('aria-describedby', describedById);
         $el.attr('data-error-describedby', 'true');
 
         var $err = $('<div class="field-error error" id="' + describedById + '" aria-live="polite"></div>');
         $err.text(message);
 
-        // Place error after the field (or after fieldset for radios)
         if ($el.is(':radio')) {
           $el.closest('fieldset').append($err);
         } else {
@@ -139,7 +139,7 @@
 
       // LAB7 Q3: Build error summary with links that move focus
       function addErrorSummaryItem($list, $focusEl, focusId, message) {
-        // R.G. hint fixed: anchor now has href that points to a real id
+        // LAB7 Q3 (R.G. hint fixed): anchor now has href that points to a real id
         var $a = $('<a></a>');
         $a.attr('href', '#' + focusId);
         $a.text(message);
@@ -160,7 +160,7 @@
         var $gender = $('input[name="gender"]');
         var $terms = $('#accept_agbs');
 
-        // Clear UI
+        // Reset UI
         clearInlineErrors();
         $('#errorList').empty();
         $('#errorSummary').addClass('hidden');
@@ -191,16 +191,15 @@
           $bio.attr('aria-describedby', 'biography_help');
         }
 
-        // Validate gender (radio group)
+        // Validate gender
         if ($gender.filter(':checked').length === 0) {
-          var $focusRadio = $('#gender_male'); // focus first option
+          var $focusRadio = $('#gender_male');
           errors.push({
             message: 'Please tell us your gender!',
             $focus: $focusRadio,
             focusId: 'gender_male',
             inlineId: 'gender_error'
           });
-          // Mark first radio invalid and attach message at end of fieldset
           showInlineError($focusRadio, 'Please tell us your gender!', 'gender_error');
         }
 
@@ -216,33 +215,51 @@
         }
 
         if (errors.length > 0) {
-          // Build error summary
           var $list = $('#errorList');
           errors.forEach(function (err) {
             addErrorSummaryItem($list, err.$focus, err.focusId, err.message);
           });
 
-          // Show and focus error summary (focus management requirement)
+          // LAB7 Q3: Focus moves to error summary
           $('#errorSummary').removeClass('hidden').focus();
           return false;
         }
 
-        // LAB7 Q3: Show success message only when there are no errors (no alert)
+        // LAB7 Q3: Show success message only when form is valid (no alert)
         $('#successMessage').removeClass('hidden').focus();
         return true;
       }
 
+      // ✅✅✅ AQUI está a correção que faltava (prefill pela URL)
+      // LAB7 Q3: Pre-fill form fields from URL parameters, then validate if requested
       $(document).ready(function () {
-        // LAB7 Q3: Validate only when "validate" param exists (keeps starter behavior)
+
+        if ($.urlParam('name')) {
+          $('#name').val($.urlParam('name'));
+        }
+
+        if ($.urlParam('biography')) {
+          $('#biography').val($.urlParam('biography'));
+        }
+
+        if ($.urlParam('gender')) {
+          $('input[name="gender"][value="' + $.urlParam('gender') + '"]').prop('checked', true);
+        }
+
+        if ($.urlParam('accept_agbs') === "1") {
+          $('#accept_agbs').prop('checked', true);
+        }
+
         if ($.urlParam('validate')) {
           validateForm();
         }
 
-        // Also validate on submit (better UX)
+        // Validate on submit too
         $('form').on('submit', function (e) {
           e.preventDefault();
           validateForm();
         });
+
       });
 
     }).call(void 0);
