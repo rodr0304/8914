@@ -1,7 +1,10 @@
 <!doctype html>
+<!-- LAB6 Q1: Added page language for screen readers -->
 <html class="js backgroundsize borderimage csstransitions fontface svg" dir="ltr" lang="en">
 <head>
 	<meta charset="utf-8">
+
+	<!-- LAB6 Q1: Updated page title to be descriptive -->
 	<title>Hi/Max Real Estate | Home</title>
 
 	<script src="https://www.canada.ca/etc/designs/canada/cdts/gcweb/v4_1_0/wet-boew/js/i18n/en.min.js"></script>
@@ -28,8 +31,10 @@
 
 <body>
 
+	<!-- LAB6 Q1: Added skip link for keyboard and screen reader users -->
 	<a class="wb-inv" href="#main-content">Skip to main content</a>
 
+	<!-- LAB6 Q1: Converted generic header container into a semantic <header> landmark with a unique label -->
 	<header aria-label="Application header">
 		<div class="app-bar">
 			<div class="container">
@@ -42,6 +47,7 @@
 			</div>
 		</div>
 
+		<!-- LAB6 Q1: Added semantic <nav> landmark and unique aria-label for primary navigation -->
 		<nav aria-label="Primary navigation">
 			<div id="wb-sm" data-ajax-replace="../ajax/cdtsMenu-en.html" data-trgt="mb-pnl"
 				class="wb-menu visible-md visible-lg wb-init wb-data-ajax-replace-inited wb-menu-inited wb-navcurr-inited"
@@ -62,7 +68,12 @@
 		</nav>
 	</header>
 
+	<!-- LAB6 Q1: Added semantic <main> landmark with id to match skip link + unique label -->
 	<main id="main-content" property="mainContentOfPage" class="container" aria-label="Main content">
+
+		<!-- LAB6 Q2: Added semantic content using headings, sections, articles, images, lists, links, and a data table for areas A, B, C, D, F, G, H -->
+
+		<!-- LAB6 Q2 (Content A): Hero section with H1, intro text, and call-to-action link -->
 		<section aria-labelledby="hero-title">
 			<div class="row">
 				<div class="col-md-7">
@@ -72,6 +83,7 @@
 				</div>
 				<div class="col-md-5">
 					<figure>
+						<!-- LAB6 Q2: Added informative image with alt text and a visible caption -->
 						<img src="1.png" class="img-responsive" alt="A real estate agent placing a “For Sale” sign in front of a house.">
 						<figcaption class="small">Your next move starts with the right support.</figcaption>
 					</figure>
@@ -80,6 +92,7 @@
 		</section>
 
 		<div class="row">
+			<!-- LAB6 Q2 (Content B): Related resources in an <aside> with a list of links -->
 			<aside class="col-md-4 pull-right" aria-labelledby="related-title">
 				<h2 id="related-title">Related resources</h2>
 				<p>It's time to sell and find the next “one”. Let us help you navigate the ins &amp; outs of your next move.</p>
@@ -90,6 +103,7 @@
 				</ul>
 			</aside>
 
+			<!-- LAB6 Q2 (Content C): Main informational section with headings and stats table -->
 			<section class="col-md-8" aria-labelledby="choose-title">
 				<h2 id="choose-title">Why choosing Hi/Max</h2>
 				<p>Hi/Max agents go above and beyond and always strive to be the best they can be. HI/MAX is extremely community focused, and our agents are too!</p>
@@ -97,6 +111,7 @@
 				<h3 id="stats-title">Stats of HI/Max</h3>
 
 				<div class="table-responsive">
+					<!-- LAB6 Q2: Data table coded with explicit header associations using id + headers (as required) -->
 					<table class="table table-bordered" aria-labelledby="stats-title">
 						<caption class="wb-inv">Properties sold and average selling prices by year.</caption>
 						<thead>
@@ -133,6 +148,7 @@
 			</section>
 		</div>
 
+		<!-- LAB6 Q2 (Content D/F/G/H): Resources section using <article> for each resource card and a final CTA section -->
 		<section id="resources" aria-labelledby="more-title">
 			<h2 id="more-title">More Resources on How to Choose the Right Agent</h2>
 
@@ -141,6 +157,7 @@
 					<div class="row">
 						<div class="col-md-4">
 							<figure>
+								<!-- LAB6 Q2: Added informative image with alt text and a visible caption -->
 								<img src="2.png" class="img-responsive" alt="A real estate agent meeting with a client at a desk.">
 								<figcaption class="small">Meet with an agent to plan your next steps.</figcaption>
 							</figure>
@@ -170,6 +187,7 @@
 				<section class="col-md-4" aria-labelledby="cta-title" id="home-worth">
 					<h3 id="cta-title">Ready to talk?</h3>
 					<figure>
+						<!-- LAB6 Q2: Added informative image with alt text and a visible caption -->
 						<img src="3.png" class="img-responsive" alt="A small red house-shaped sign that says “For Sale” hanging from a tree branch.">
 						<figcaption class="small">Let’s find the right plan for your home.</figcaption>
 					</figure>
@@ -186,6 +204,7 @@
 		</div>
 	</main>
 
+	<!-- LAB6 Q1: Converted generic footer container into a semantic <footer> landmark with a unique label -->
 	<footer aria-label="Application footer">
 		<div id="wb-info" class="wb-navcurr-inited">
 			<div class="gc-sub-footer">
@@ -197,6 +216,9 @@
 							<li><a href="#">Privacy policy</a></li>
 							<li><a href="#">Accessibility statement</a></li>
 							<li style="list-style: none;" class="social">
+								<!-- LAB6 Q1: Improved accessibility of the social (Twitter/X) icon:
+								     - Added aria-label to the link for screen readers
+								     - Marked SVG as aria-hidden because it is decorative when link text is provided -->
 								<a href="#" aria-label="Hi/Max Real Estate on X (Twitter)">
 									<svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
 										<path d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-48.9 158.8c.2 2.8.2 5.7.2 8.5 0 86.7-66 186.6-186.6 186.6-37.2 0-71.7-10.8-100.7-29.4 5.3.6 10.4.8 15.8.8 30.7 0 58.9-10.4 81.4-28-28.8-.6-53-19.5-61.3-45.5 10.1 1.5 19.2 1.5 29.6-1.2-30-6.1-52.5-32.5-52.5-64.4v-.8c8.7 4.9 18.9 7.9 29.6 8.3a65.447 65.447 0 0 1-29.2-54.6c0-12.2 3.2-23.4 8.9-33.1 32.3 39.8 80.8 65.8 135.2 68.6-9.3-44.5 24-80.6 64-80.6 18.9 0 35.9 7.9 47.9 20.7 14.8-2.8 29-8.3 41.6-15.8-4.9 15.2-15.2 28-28.8 36.1 13.2-1.4 26-5.1 37.8-10.2-8.9 13.1-20.1 24.7-32.9 34z"></path>
