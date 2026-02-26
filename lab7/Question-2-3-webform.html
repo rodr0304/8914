@@ -1,26 +1,25 @@
 <!DOCTYPE html>
-<!-- LAB7 Q2/Q3: Accessible form markup + focus management + error summary + no alert() + URL prefill support -->
+<!-- LAB7 Q2/Q3: Accessible form markup + focus management + error summary + URL prefill + NO jQuery dependency -->
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <title>Feedback form</title>
+
   <style>
     .control, fieldset { margin: 6px 0; }
-
     label { display: inline-block; width: 120px; vertical-align: top; }
     input + label { width: auto; }
 
     .error, .required { color: red; }
-
     fieldset ul { margin: 0; }
 
     /* LAB7 Q1/Q3: Visible focus indicator */
     :focus-visible { outline: 3px solid #000; outline-offset: 2px; }
 
-    /* LAB7 Q3: utility */
+    /* LAB7 Q3: Utility */
     .hidden { display: none; }
 
-    /* LAB7 Q3: error summary box */
+    /* LAB7 Q3: Error summary box */
     .error-summary {
       border: 2px solid #b00020;
       padding: 12px;
@@ -29,6 +28,16 @@
     .error-summary h2 { margin-top: 0; }
 
     .field-error { margin-left: 120px; } /* aligns with label width */
+
+    /* LAB7: Offscreen helper for screen-reader-only text */
+    .offscreen {
+      position: absolute;
+      left: -10000px;
+      top: auto;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
   </style>
 </head>
 
@@ -36,35 +45,38 @@
   <h1>Feedback form</h1>
 
   <form action="" method="get" novalidate>
-    <!-- LAB7 Q3: Added accessible error summary (focus will move here when errors exist) -->
-    <fieldset id="errorSummary" class="error-summary hidden" aria-labelledby="errorSummaryTitle" role="alert" aria-live="assertive" tabindex="-1">
+    <!-- LAB7 Q3: Accessible error summary (focus moves here when errors exist) -->
+    <fieldset id="errorSummary"
+              class="error-summary hidden"
+              aria-labelledby="errorSummaryTitle"
+              role="alert"
+              aria-live="assertive"
+              tabindex="-1">
       <legend id="errorSummaryTitle">Errors</legend>
       <ul id="errorList"></ul>
     </fieldset>
 
-    <!-- LAB7 Q3: Added success message shown only when all inputs are valid -->
+    <!-- LAB7 Q3: Success message shown only when the form is valid -->
     <div id="successMessage" class="hidden" role="status" aria-live="polite" tabindex="-1">
       All inputs are valid.
     </div>
 
     <div class="control">
-      <!-- LAB7 Q2: Added for/id association for label/input -->
+      <!-- LAB7 Q2: Proper label association -->
       <label for="name">Full name <span class="required" aria-hidden="true">*</span></label>
-      <input id="name" name="name" type="text" aria-required="true" aria-describedby="name_description" />
-      <!-- LAB7 Q3: Description element exists for aria-describedby -->
+      <input id="name" name="name" type="text" aria-required="true" />
       <span id="name_description" class="offscreen">Full name is required.</span>
     </div>
 
     <div class="control">
-      <!-- LAB7 Q2: Added for/id association -->
+      <!-- LAB7 Q2: Proper label association -->
       <label for="biography">Biography</label>
       <textarea id="biography" name="biography"></textarea>
-      <!-- LAB7 Q2/Q3: Gave help text an id to support aria-describedby when needed -->
       <span id="biography_help">Include examples on your skills in JavaScript.</span>
     </div>
 
     <!-- LAB7 Q2: Use fieldset/legend for radio group -->
-    <fieldset class="control" aria-describedby="gender_description">
+    <fieldset class="control">
       <legend>Gender <span class="required" aria-hidden="true">*</span></legend>
       <span id="gender_description" class="offscreen">Gender is required.</span>
 
@@ -80,189 +92,171 @@
     </fieldset>
 
     <div class="control">
-      <input id="accept_agbs" name="accept_agbs" type="checkbox" value="1" aria-describedby="accept_agbs_description" />
+      <input id="accept_agbs" name="accept_agbs" type="checkbox" value="1" />
       <label for="accept_agbs">I accept the terms and conditions</label>
       <span id="accept_agbs_description" class="offscreen">You must accept the terms and conditions.</span>
     </div>
 
     <div class="control">
+      <!-- Keep hidden validate for submission compatibility -->
       <input name="validate" type="hidden" value="1" />
       <input type="submit" value="Register" />
     </div>
   </form>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
-          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-          crossorigin="anonymous"></script>
-
   <script>
     "use strict";
 
-    (function () {
+    // ---------- Helpers ----------
+    function $(id) { return document.getElementById(id); }
 
-      // LAB7 Q3: helper to read URL param (starter behavior)
-      $.urlParam = function (name) {
-        var results = new RegExp('[?&]' + name + '=([^&#]*)').exec(window.location.href);
-        return results === null ? null : (decodeURI(results[1]) || null);
-      };
+    function show(el) { el.classList.remove("hidden"); }
+    function hide(el) { el.classList.add("hidden"); }
 
-      // LAB7 Q3: Clear previous inline errors
-      function clearInlineErrors() {
-        $('.field-error').remove();
-        $('[aria-invalid="true"]').removeAttr('aria-invalid');
-        $('[data-has-error="true"]').removeAttr('data-has-error');
+    function clearChildren(el) {
+      while (el.firstChild) el.removeChild(el.firstChild);
+    }
 
-        // Remove only error-specific describedby when we add it
-        $('[data-error-describedby="true"]').each(function () {
-          $(this).removeAttr('aria-describedby');
-          $(this).removeAttr('data-error-describedby');
-        });
+    function removeInlineErrors() {
+      document.querySelectorAll(".field-error").forEach(el => el.remove());
+      document.querySelectorAll('[aria-invalid="true"]').forEach(el => el.removeAttribute("aria-invalid"));
+      document.querySelectorAll('[data-error-describedby="true"]').forEach(el => {
+        el.removeAttribute("aria-describedby");
+        el.removeAttribute("data-error-describedby");
+      });
+    }
+
+    // LAB7 Q3: inline error and aria-describedby connection
+    function setInlineError(fieldEl, message, errorId, appendToFieldset) {
+      fieldEl.setAttribute("aria-invalid", "true");
+      fieldEl.setAttribute("aria-describedby", errorId);
+      fieldEl.setAttribute("data-error-describedby", "true");
+
+      const err = document.createElement("div");
+      err.className = "field-error error";
+      err.id = errorId;
+      err.setAttribute("aria-live", "polite");
+      err.textContent = message;
+
+      if (appendToFieldset) {
+        appendToFieldset.appendChild(err);
+      } else {
+        fieldEl.insertAdjacentElement("afterend", err);
       }
+    }
 
-      // LAB7 Q3: Show inline field error and connect via aria-describedby
-      function showInlineError($el, message, describedById) {
-        $el.attr('aria-invalid', 'true');
-        $el.attr('data-has-error', 'true');
+    // LAB7 Q3: error summary items that focus correct field
+    function addErrorSummaryItem(listEl, fieldEl, fieldId, message) {
+      const li = document.createElement("li");
+      const a = document.createElement("a");
 
-        $el.attr('aria-describedby', describedById);
-        $el.attr('data-error-describedby', 'true');
+      // LAB7 Q3 (R.G. hint fixed): link must have a valid href target
+      a.href = "#" + fieldId;
+      a.textContent = message;
 
-        var $err = $('<div class="field-error error" id="' + describedById + '" aria-live="polite"></div>');
-        $err.text(message);
-
-        if ($el.is(':radio')) {
-          $el.closest('fieldset').append($err);
-        } else {
-          $el.after($err);
-        }
-      }
-
-      // LAB7 Q3: Build error summary with links that move focus
-      function addErrorSummaryItem($list, $focusEl, focusId, message) {
-        // LAB7 Q3 (R.G. hint fixed): anchor now has href that points to a real id
-        var $a = $('<a></a>');
-        $a.attr('href', '#' + focusId);
-        $a.text(message);
-        $a.on('click', function (e) {
-          e.preventDefault();
-          $focusEl.focus();
-          history.replaceState(null, '', '#' + focusId);
-        });
-
-        $list.append($('<li></li>').append($a));
-      }
-
-      function validateForm() {
-        var errors = [];
-
-        var $name = $('#name');
-        var $bio = $('#biography');
-        var $gender = $('input[name="gender"]');
-        var $terms = $('#accept_agbs');
-
-        // Reset UI
-        clearInlineErrors();
-        $('#errorList').empty();
-        $('#errorSummary').addClass('hidden');
-        $('#successMessage').addClass('hidden');
-
-        // Validate name
-        if (!$name.val() || !$name.val().trim()) {
-          errors.push({
-            message: 'Please enter your name!',
-            $focus: $name,
-            focusId: 'name',
-            inlineId: 'name_error'
-          });
-          showInlineError($name, 'Please enter your name!', 'name_error');
-        }
-
-        // Validate biography
-        if (!$bio.val() || !$bio.val().trim()) {
-          errors.push({
-            message: 'Please tell us something about your history!',
-            $focus: $bio,
-            focusId: 'biography',
-            inlineId: 'biography_error'
-          });
-          showInlineError($bio, 'Please tell us something about your history!', 'biography_error');
-        } else {
-          // LAB7 Q2: Keep existing help association when valid
-          $bio.attr('aria-describedby', 'biography_help');
-        }
-
-        // Validate gender
-        if ($gender.filter(':checked').length === 0) {
-          var $focusRadio = $('#gender_male');
-          errors.push({
-            message: 'Please tell us your gender!',
-            $focus: $focusRadio,
-            focusId: 'gender_male',
-            inlineId: 'gender_error'
-          });
-          showInlineError($focusRadio, 'Please tell us your gender!', 'gender_error');
-        }
-
-        // Validate terms
-        if (!$terms.is(':checked')) {
-          errors.push({
-            message: 'You must accept our terms and conditions!',
-            $focus: $terms,
-            focusId: 'accept_agbs',
-            inlineId: 'accept_agbs_error'
-          });
-          showInlineError($terms, 'You must accept our terms and conditions!', 'accept_agbs_error');
-        }
-
-        if (errors.length > 0) {
-          var $list = $('#errorList');
-          errors.forEach(function (err) {
-            addErrorSummaryItem($list, err.$focus, err.focusId, err.message);
-          });
-
-          // LAB7 Q3: Focus moves to error summary
-          $('#errorSummary').removeClass('hidden').focus();
-          return false;
-        }
-
-        // LAB7 Q3: Show success message only when form is valid (no alert)
-        $('#successMessage').removeClass('hidden').focus();
-        return true;
-      }
-
-      // ✅✅✅ AQUI está a correção que faltava (prefill pela URL)
-      // LAB7 Q3: Pre-fill form fields from URL parameters, then validate if requested
-      $(document).ready(function () {
-
-        if ($.urlParam('name')) {
-          $('#name').val($.urlParam('name'));
-        }
-
-        if ($.urlParam('biography')) {
-          $('#biography').val($.urlParam('biography'));
-        }
-
-        if ($.urlParam('gender')) {
-          $('input[name="gender"][value="' + $.urlParam('gender') + '"]').prop('checked', true);
-        }
-
-        if ($.urlParam('accept_agbs') === "1") {
-          $('#accept_agbs').prop('checked', true);
-        }
-
-        if ($.urlParam('validate')) {
-          validateForm();
-        }
-
-        // Validate on submit too
-        $('form').on('submit', function (e) {
-          e.preventDefault();
-          validateForm();
-        });
-
+      a.addEventListener("click", function (e) {
+        e.preventDefault();
+        fieldEl.focus();
+        history.replaceState(null, "", "#" + fieldId);
       });
 
-    }).call(void 0);
+      li.appendChild(a);
+      listEl.appendChild(li);
+    }
+
+    // ---------- Validation ----------
+    function validateForm() {
+      const errors = [];
+
+      const nameEl = $("name");
+      const bioEl = $("biography");
+      const termsEl = $("accept_agbs");
+      const genderMaleEl = $("gender_male");
+      const genderFemaleEl = $("gender_female");
+      const genderFieldset = genderMaleEl.closest("fieldset");
+
+      const errorSummary = $("errorSummary");
+      const errorList = $("errorList");
+      const successMessage = $("successMessage");
+
+      // Reset UI
+      removeInlineErrors();
+      clearChildren(errorList);
+      hide(errorSummary);
+      hide(successMessage);
+
+      // Name required
+      if (!nameEl.value || !nameEl.value.trim()) {
+        const msg = "Please enter your name!";
+        errors.push({ msg, fieldEl: nameEl, fieldId: "name" });
+        setInlineError(nameEl, msg, "name_error", null);
+      }
+
+      // Biography required (as in starter behavior)
+      if (!bioEl.value || !bioEl.value.trim()) {
+        const msg = "Please tell us something about your history!";
+        errors.push({ msg, fieldEl: bioEl, fieldId: "biography" });
+        setInlineError(bioEl, msg, "biography_error", null);
+      } else {
+        // Keep help text association when valid
+        bioEl.setAttribute("aria-describedby", "biography_help");
+      }
+
+      // Gender required
+      const genderChecked = document.querySelector('input[name="gender"]:checked');
+      if (!genderChecked) {
+        const msg = "Please tell us your gender!";
+        // Focus first radio if missing
+        errors.push({ msg, fieldEl: genderMaleEl, fieldId: "gender_male" });
+        setInlineError(genderMaleEl, msg, "gender_error", genderFieldset);
+      }
+
+      // Terms required
+      if (!termsEl.checked) {
+        const msg = "You must accept our terms and conditions!";
+        errors.push({ msg, fieldEl: termsEl, fieldId: "accept_agbs" });
+        setInlineError(termsEl, msg, "accept_agbs_error", null);
+      }
+
+      // If errors: show summary, focus it
+      if (errors.length > 0) {
+        errors.forEach(err => addErrorSummaryItem(errorList, err.fieldEl, err.fieldId, err.msg));
+        show(errorSummary);
+        errorSummary.focus();
+        return false;
+      }
+
+      // If valid: show success message and focus it
+      show(successMessage);
+      successMessage.focus();
+      return true;
+    }
+
+    // ---------- URL Prefill + Auto Validate ----------
+    document.addEventListener("DOMContentLoaded", function () {
+      const params = new URLSearchParams(window.location.search);
+
+      // LAB7 Q3: Pre-fill from URL params (works reliably on GitHub Pages)
+      if (params.get("name")) $("name").value = params.get("name");
+      if (params.get("biography")) $("biography").value = params.get("biography");
+
+      if (params.get("gender")) {
+        const g = params.get("gender");
+        const radio = document.querySelector('input[name="gender"][value="' + g + '"]');
+        if (radio) radio.checked = true;
+      }
+
+      if (params.get("accept_agbs") === "1") $("accept_agbs").checked = true;
+
+      // Auto validate only when validate=1 is present in the URL
+      if (params.get("validate")) validateForm();
+
+      // Always validate on submit (keyboard-friendly, no page reload)
+      document.querySelector("form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        validateForm();
+      });
+    });
   </script>
 </body>
 </html>
