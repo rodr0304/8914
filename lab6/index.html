@@ -56,10 +56,17 @@
 					<h2>Topics menu</h2>
 					<div class="row">
 						<ul role="menubar" class="list-inline menu">
-							<li><a class="item" href="index-en.html" tabindex="0" aria-posinset="1" aria-setsize="7" role="menuitem">Home</a></li>
-							<li><a class="item" href="internet-en.html" tabindex="-1" aria-posinset="2" aria-setsize="7" role="menuitem">Buying</a></li>
-							<li><a class="item" href="intranet-en.html" tabindex="-1" aria-posinset="3" aria-setsize="7" role="menuitem">Selling</a></li>
-							<li><a class="item" href="faq-en.html" tabindex="-1" aria-posinset="6" aria-setsize="7" role="menuitem">FAQs</a></li>
+							<!-- LAB6 Q2: Updated internal "Home" link to point to the hero section (avoids empty hash links) -->
+							<li><a class="item" href="#hero-title" tabindex="0" aria-posinset="1" aria-setsize="7" role="menuitem">Home</a></li>
+
+							<!-- LAB6 Q2: Updated menu links to point to real on-page sections (avoids placeholder links) -->
+							<li><a class="item" href="#buying-tips" tabindex="-1" aria-posinset="2" aria-setsize="7" role="menuitem">Buying</a></li>
+							<li><a class="item" href="#risk-article" tabindex="-1" aria-posinset="3" aria-setsize="7" role="menuitem">Selling</a></li>
+
+							<!-- LAB6 Q2: Updated FAQs link to point to the FAQ section on this page -->
+							<li><a class="item" href="#faqs" tabindex="-1" aria-posinset="6" aria-setsize="7" role="menuitem">FAQs</a></li>
+
+							<!-- Contact page remains a real page link -->
 							<li><a class="item" href="contact-en.html" tabindex="-1" aria-posinset="7" aria-setsize="7" role="menuitem">Contact us</a></li>
 						</ul>
 					</div>
@@ -79,6 +86,8 @@
 				<div class="col-md-7">
 					<h1 id="hero-title">Hi/Max Real Estate &amp; Houses</h1>
 					<p>Buying or selling a home is likely the largest and most important transaction you’ll ever make. That’s why so many trust Hi/MAX Real Estate, which according to Canadian consumers, has been voted #1 Most Trusted Real Estate Agents in Canada six times in a row.</p>
+
+					<!-- LAB6 Q2: Button link points to a real on-page section -->
 					<p><a class="btn btn-primary" href="#resources">Let’s get started</a></p>
 				</div>
 				<div class="col-md-5">
@@ -97,6 +106,7 @@
 				<h2 id="related-title">Related resources</h2>
 				<p>It's time to sell and find the next “one”. Let us help you navigate the ins &amp; outs of your next move.</p>
 				<ul>
+					<!-- LAB6 Q2: All links point to real on-page IDs -->
 					<li><a href="#upgrade">Looking for an upgrade?</a></li>
 					<li><a href="#buying-tips">Buying tips</a></li>
 					<li><a href="#home-worth">How much is your current home worth?</a></li>
@@ -153,7 +163,8 @@
 			<h2 id="more-title">More Resources on How to Choose the Right Agent</h2>
 
 			<div class="row">
-				<article class="col-md-12" aria-labelledby="risk-title">
+				<!-- LAB6 Q2: Added id to create a real destination target for links -->
+				<article class="col-md-12" aria-labelledby="risk-title" id="risk-article">
 					<div class="row">
 						<div class="col-md-4">
 							<figure>
@@ -166,7 +177,7 @@
 							<h3 id="risk-title">What Are The Risks of Selling a Home Yourself?</h3>
 							<p>We’ve all seen the videos, read the stories, and gasped at the images of people who thought they could conquer a project that would have been better left to the professionals.</p>
 
-							<!-- LAB6 Q2: Updated placeholder link to point to an on-page section (avoids href="#") -->
+							<!-- LAB6 Q2: Link points to a real on-page section (no href="#") -->
 							<p><a href="#contact-us" class="btn btn-default">Read more</a></p>
 						</div>
 					</div>
@@ -178,7 +189,7 @@
 					<h3 id="q7-title">7 Questions to Ask a Real Estate Agent Before You Commit</h3>
 					<p>According to research by the National Association of Realtors, there are considerable benefits to working with a real estate agent, including higher sale prices.</p>
 
-					<!-- LAB6 Q2: Updated placeholder link to point to an on-page section (avoids href="#") -->
+					<!-- LAB6 Q2: Link points to a real on-page section (no href="#") -->
 					<p><a href="#contact-us">Learn more</a></p>
 				</article>
 
@@ -186,7 +197,7 @@
 					<h3 id="r8-title">8 Reasons to Hire an Agent When Selling Your Home</h3>
 					<p>With all the many different moving parts involved in selling your home, here are eight very valid reasons to have a real estate agent on speed dial.</p>
 
-					<!-- LAB6 Q2: Updated placeholder link to point to an on-page section (avoids href="#") -->
+					<!-- LAB6 Q2: Link points to a real on-page section (no href="#") -->
 					<p><a href="#contact-us">Learn more</a></p>
 				</article>
 
@@ -198,17 +209,32 @@
 						<figcaption class="small">Let’s find the right plan for your home.</figcaption>
 					</figure>
 
-					<!-- LAB6 Q2: Keeping a real page link for contact (as provided in starter template) -->
+					<!-- LAB6 Q2: Keeping a real page link for contact -->
 					<p><a class="btn btn-primary" href="contact-en.html">Contact us</a></p>
 				</section>
 			</div>
 		</section>
 
-		<!-- LAB6 Q2: Added a simple on-page destination section so links do not use href="#" -->
+		<!-- LAB6 Q2: Added a real destination section so links do not use empty hashes -->
 		<section id="contact-us" aria-labelledby="contact-us-title">
 			<h2 id="contact-us-title">Contact and next steps</h2>
 			<p>If you would like to learn more about buying, selling, or working with an agent, please contact us to discuss your goals.</p>
 			<p><a class="btn btn-default" href="contact-en.html">Go to Contact page</a></p>
+		</section>
+
+		<!-- LAB6 Q2: Added an FAQ section to support the menu link (no placeholder links) -->
+		<section id="faqs" aria-labelledby="faqs-title">
+			<h2 id="faqs-title">FAQs</h2>
+			<dl>
+				<dt>Do I need an agent to buy a home?</dt>
+				<dd>It depends. An agent can help you compare listings, understand offers, and navigate paperwork.</dd>
+
+				<dt>How do I prepare my home for sale?</dt>
+				<dd>Start with basic repairs, declutter, and consider a home inspection to identify issues early.</dd>
+
+				<dt>How do I contact Hi/Max?</dt>
+				<dd>You can use the contact page linked in the “Contact us” button.</dd>
+			</dl>
 		</section>
 
 		<!-- LAB6 Q2: Added on-page destinations for footer links (avoids placeholder links) -->
@@ -247,7 +273,7 @@
 					<div>
 						<h3 class="wb-inv" id="aboutWebApp">Hi/Max Real Estate</h3>
 						<ul>
-							<!-- LAB6 Q2: Updated footer links to point to real on-page destinations (avoids href="#") -->
+							<!-- LAB6 Q2: Updated footer links to point to real on-page destinations (avoids placeholder links) -->
 							<li><a href="#about-company">About the company</a></li>
 							<li><a href="#privacy-policy">Privacy policy</a></li>
 							<li><a href="#accessibility-statement">Accessibility statement</a></li>
@@ -256,7 +282,7 @@
 								<!-- LAB6 Q1: Improved accessibility of the social (Twitter/X) icon:
 								     - Added aria-label to the link for screen readers
 								     - Marked SVG as aria-hidden because it is decorative when link text is provided -->
-								<a href="#about-company" aria-label="Hi/Max Real Estate on X (Twitter)">
+								<a href="https://x.com/" target="_blank" rel="noopener noreferrer" aria-label="Hi/Max Real Estate on X (Twitter) (opens in a new tab)">
 									<svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
 										<path d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-48.9 158.8c.2 2.8.2 5.7.2 8.5 0 86.7-66 186.6-186.6 186.6-37.2 0-71.7-10.8-100.7-29.4 5.3.6 10.4.8 15.8.8 30.7 0 58.9-10.4 81.4-28-28.8-.6-53-19.5-61.3-45.5 10.1 1.5 19.2 1.5 29.6-1.2-30-6.1-52.5-32.5-52.5-64.4v-.8c8.7 4.9 18.9 7.9 29.6 8.3a65.447 65.447 0 0 1-29.2-54.6c0-12.2 3.2-23.4 8.9-33.1 32.3 39.8 80.8 65.8 135.2 68.6-9.3-44.5 24-80.6 64-80.6 18.9 0 35.9 7.9 47.9 20.7 14.8-2.8 29-8.3 41.6-15.8-4.9 15.2-15.2 28-28.8 36.1 13.2-1.4 26-5.1 37.8-10.2-8.9 13.1-20.1 24.7-32.9 34z"></path>
 									</svg>
